@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+/*
+sm  = 640px
+md  = 768px
+lg  = 1024px
+xl  = 1280px
+2xl = 1536px
+
+*/
+.navbar1{
+  background-color: #404650;
+  color: #A37313;
+}
+:root {
+  --dark-blue: #252b42;
+  --sky-blue: #23a6f0;
+  --light-sky-blue: #b2e3ff;
+  --light-orange: #e77c40;
+  --red: #e74040;
+  --light-pink: #ffdcd1;
+  --light-gray: #737373;
+  --yellow: #f3cd03;
+  --green: #2dc071;
+  --light-green: #b9eaa8;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  line-height: 1.4;
+}
+
+.font-cairo {
+  font-family: "Cairo", sans-serif;
+}
+
+/* start page  */
+.start {
+  background-image: url("../src/assets/images/back-startpage.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative;
+  transition: background-position 3.6s ease;
+}
+
+.start::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(19, 19, 19, 0.232); 
+  backdrop-filter: blur(2px);
+  z-index: 0;
+}
+
+/* nav  */
+nav ul ul li{
+  padding-inline: 16px;
+  padding-block: 8px;
+}
+
+nav ul li:hover{
+  color: rgb(121, 112, 112);
+  
+}
+/* end nav  */
+
+/* footer */
+.footer h2{
+  margin-bottom: 24px;
+}
+
+/* .footer ul li{
+  padding-block: 8px;
+} */
+
+/* .footer ul li:hover{
+  color: #D4AF37;
+} */
+/* end footer */
+
+/* contianer */
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* ≥576px */
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+/* ≥768px */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+/* ≥992px */
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* ≥1200px */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* ≥1400px */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* contianer */
+/* theMuseum */
+/* .theMuseum{
+  background-image: url(./assets/images/headerMuseum.png);
+} */
+
+/* theMuseum */
