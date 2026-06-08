@@ -8,7 +8,6 @@ import Footer from "./components/footer/Footer";
 import TheGreatFoyer from "./page/TheGreatFoyer";
 import LoginPage from "./page/LoginPage";
 import CreateAccount from "./page/CreateAccount";
-import Ticket from "./page/ticket";
 import TheMuseum from "./page/TheMuseum";
 import Visit from "./page/Visit";
 import MuseumHalls from "./page/MuseumHalls";
@@ -32,6 +31,7 @@ import MyDashboard from "./page/staff/MyDashboard";
 import ExhibitionDetails from "./page/ExhibitionDetails";
 
 
+
 function Layout() {
   const location = useLocation();
 
@@ -50,7 +50,6 @@ function Layout() {
           <Route path="/TheGreatFoyer" element={<TheGreatFoyer />} />
           <Route path="/loginPage" element={<LoginPage />} />
           <Route path="/CreateAccount" element={<CreateAccount />} />
-          <Route path="/Ticket" element={<Ticket />} />
           <Route path="/Visit" element={<Visit />} />
           <Route path="/TheMuseum" element={<TheMuseum />} />
           <Route path="/MuseumHalls" element={<MuseumHalls />} />
