@@ -68,7 +68,7 @@ const ExhibitionDetails = () => {
         {/* الكارت الرئيسي */}
         <div className="relative h-64 md:h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl mb-12">
           <img src={displayData.imageUrl} className="w-full h-full object-cover" alt="" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-12">
+          <div className="absolute inset-0  from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-12">
             <h1 className="text-2xl md:text-4xl font-black text-white leading-tight">{displayData.name}</h1>
             <p className="text-amber-400 font-bold mt-2 text-xs md:text-sm">تاريخ العرض: {displayData.startDate} - {displayData.endDate}</p>
           </div>

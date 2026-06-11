@@ -5,7 +5,6 @@ import PageTransition from "./components/PageTransition";
 import Startpage from "./page/Startpage";
 import Home from "./page/Home";
 import Footer from "./components/footer/Footer";
-import TheGreatFoyer from "./page/TheGreatFoyer";
 import LoginPage from "./page/LoginPage";
 import CreateAccount from "./page/CreateAccount";
 import TheMuseum from "./page/TheMuseum";
@@ -30,14 +29,18 @@ import MyTasks from "./page/staff/MyTasks";
 import MyDashboard from "./page/staff/MyDashboard";
 import ExhibitionDetails from "./page/ExhibitionDetails";
 
-
-
 function Layout() {
   const location = useLocation();
 
-  const hideNavbar = location.pathname === "/" || location.pathname === "/loginPage" || location.pathname === "/CreateAccount";
-  const hideFooter = location.pathname === "/" || location.pathname === "/loginPage" || location.pathname === "/CreateAccount";
-  
+  const hideNavbar =
+    location.pathname === "/" ||
+    location.pathname === "/loginPage" ||
+    location.pathname === "/CreateAccount";
+  const hideFooter =
+    location.pathname === "/" ||
+    location.pathname === "/loginPage" ||
+    location.pathname === "/CreateAccount";
+
   return (
     <div className="flex flex-col min-h-screen">
       <PageTransition />
@@ -47,29 +50,31 @@ function Layout() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Startpage />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/TheGreatFoyer" element={<TheGreatFoyer />} />
           <Route path="/loginPage" element={<LoginPage />} />
           <Route path="/CreateAccount" element={<CreateAccount />} />
           <Route path="/Visit" element={<Visit />} />
           <Route path="/TheMuseum" element={<TheMuseum />} />
           <Route path="/MuseumHalls" element={<MuseumHalls />} />
-          <Route path="/AlmisalatAlmuealaqa" element={<AlmisalatAlmuealaqa />} />
-          <Route path="/AldarajAleazim" element={<AldarajAleazim/>} /> 
-          <Route path="/TutHall" element={<TutHall/>} />
-          <Route path="/KingKhufu" element={<KingKhufu/>} />  
-          <Route path="/MainHalls" element={<MainHalls/>} />
-          <Route path="/Staff" element={<Staff/>} />
-          <Route path="/Attendance" element={<Attendance/>} />
-          <Route path="/Tasks" element={<Tasks/>} />
+          <Route
+            path="/AlmisalatAlmuealaqa"
+            element={<AlmisalatAlmuealaqa />}
+          />
+          <Route path="/AldarajAleazim" element={<AldarajAleazim />} />
+          <Route path="/TutHall" element={<TutHall />} />
+          <Route path="/KingKhufu" element={<KingKhufu />} />
+          <Route path="/MainHalls" element={<MainHalls />} />
+          <Route path="/Staff" element={<Staff />} />
+          <Route path="/Attendance" element={<Attendance />} />
+          <Route path="/Tasks" element={<Tasks />} />
           <Route path="/Artifacts" element={<Artifacts />} />
-          <Route path="/Artifact/:id" element={<ArtifactDetails/>} />
-          <Route path="/Search" element={<SearchPage/>} />
-          <Route path="/Booking" element={<Booking/>} />
-          <Route path="/Conser" element={<Conser/>} />
-          <Route path="/ExhibitionDetails" element={<ExhibitionDetails/>} />
+          <Route path="/Artifact/:id" element={<ArtifactDetails />} />
+          <Route path="/Search" element={<SearchPage />} />
+          <Route path="/Booking" element={<Booking />} />
+          <Route path="/Conser" element={<Conser />} />
+          <Route path="/ExhibitionDetails" element={<ExhibitionDetails />} />
           <Route path="/exhibition/:id" element={<ExhibitionDetails />} />
-          <Route path="/Gardens" element={<Gardens/>} />
-          <Route path="/MyDashboard" element={<MyDashboard/>} />
+          <Route path="/Gardens" element={<Gardens />} />
+          <Route path="/MyDashboard" element={<MyDashboard />} />
           <Route path="/section/:sectionId" element={<SectionDetails />} />
           <Route path="/my-tasks" element={<MyTasks />} />
         </Routes>

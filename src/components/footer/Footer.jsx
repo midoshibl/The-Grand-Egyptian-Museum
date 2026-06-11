@@ -21,8 +21,8 @@ function Footer() {
           <ul className="text-[#D1D5DB] cursor-pointer ">
             <li className="hover:text-[#D4AF37] mb-2"><a href="/home">الرئيسية</a></li>
             <li className="hover:text-[#D4AF37] mb-2"><a href="/MuseumHalls">القاعات</a></li>
-            <li className="hover:text-[#D4AF37] mb-2"><a href="">المعارض المؤقتة</a></li>
-            <li className="hover:text-[#D4AF37] mb-2"><a href="/Ticket">حجز التذكرة</a></li>
+            <li className="hover:text-[#D4AF37] mb-2"><a href="/ExhibitionDetails">المعارض المؤقتة</a></li>
+            <li className="hover:text-[#D4AF37] mb-2"><a href="/Booking">حجز التذكرة</a></li>
             <li className="hover:text-[#D4AF37] mb-2"><a href="/TheMuseum">عن المتحف</a></li>
           </ul>
         </div>
