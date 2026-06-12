@@ -107,11 +107,13 @@ function Navbar() {
             <ul className="flex flex-col gap-5 text-right font-bold text-slate-700 text-base mb-6">
               <li><a href="/home" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">الرئيسية</a></li>
               <li><a href="/Artifacts" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">القطع الأثرية</a></li>
+              <li><a href="/MuseumHalls" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500"> القاعات</a></li>
               <li><a href="/ExhibitionDetails" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">المعارض المؤقتة</a></li>
               <li><a href="/Visit" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">الزيارة</a></li>
               <li><a href="/Conser" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">🔬 معامل الترميم</a></li>
               <li><a href="/Gardens" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">🌳 حدائق المتحف</a></li>
               <li><a href="/Search" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500">🔍 محرك البحث الذكي</a></li>
+              <li><a href="/TheMuseum" onClick={() => setOpen(false)} className="block py-2 border-b border-slate-50 hover:text-amber-500"> عن المتحف</a></li>
               
               {isLoggedIn && (
                 <>
