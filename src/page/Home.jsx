@@ -1,90 +1,133 @@
 // import MuseumSlider from "../components/Home/MuseumSlider";
 import Sliderimg from "../components/Home/Sliderimg";
 import SomeHalls from "../components/Home/SomeHalls";
-import { Clock8,MapPin ,Ticket } from 'lucide-react';
+import { Clock8, MapPin, Ticket } from 'lucide-react';
+
 function Home() {
   return (
     <>
-      <div className="relative">
-        <div>
-          <div>
-            <Sliderimg />
-          </div>
-          <div className="absolute z-40 w-fit p-5 mt-[250px] left-1/2 -translate-x-1/2 text-center font-cairo text-[#FFFFFF]">
-            <h2 className="text-[77px]">المتحف المصري الكبير</h2>
-            <p className="my-10 text-[20px]">
-              اكتشف كنوز الحضارة المصرية القديمة في أكبر متحف أثري في العالم
-            </p>
-            <div className="flex justify-center gap-4">
-              <a href="/MuseumHalls" className="border-2 border-[#FFFFFF] py-5 px-10 rounded-2xl hover:scale-90 duration-200 ">  استكشف القاعات</a>
-              <a href="/Ticket" className="bg-[#D4AF37] py-5 px-10 rounded-2xl hover:scale-90 duration-200 "> احجز تذكرتك الآن</a>
-            </div>
+      {/* القسم الرئيسي (Hero Section) */}
+      <div className="relative w-full min-h-[70vh] md:min-h-screen flex items-center justify-center overflow-hidden">
+        {/* خلفية الصور السلايدر */}
+        <div className="absolute inset-0 w-full h-full z-10">
+          <Sliderimg />
+        </div>
+        
+        {/* طبقة تظليل سوداء ناعمة فوق السلايدر لضمان وضوح الكلمات البيضاء على كافة الشاشات */}
+        <div className="absolute inset-0  z-20"></div>
+
+        {/* محتوى الكلمات الترحيبية - متجاوب بالكامل */}
+        <div className="relative z-30 w-full max-w-4xl mx-auto px-4 text-center font-cairo text-[#FFFFFF] pt-20 md:pt-0">
+          <h1 className="text-3xl md:text-5xl lg:text-7xl font-black mb-4 leading-tight drop-shadow-lg">
+            المتحف المصري الكبير
+          </h1>
+          <p className="my-6 md:my-8 text-sm md:text-lg lg:text-xl font-medium text-slate-100 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+            اكتشف كنوز الحضارة المصرية القديمة في أكبر متحف أثري في العالم
+          </p>
+          
+          {/* الأزرار متجاوبة: تحت بعض في الموبايل، جنب بعض في اللابتوب */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="/MuseumHalls" className="w-full sm:w-auto text-center border-2 border-[#FFFFFF] py-3.5 px-8 rounded-2xl font-bold hover:bg-white hover:text-slate-900 transition-all duration-300">
+              استكشف القاعات
+            </a>
+            <a href="/Ticket" className="w-full sm:w-auto text-center bg-[#D4AF37] text-white py-4 px-8 rounded-2xl font-black shadow-lg hover:bg-amber-500 hover:scale-95 transition-all duration-300">
+              احجز تذكرتك الآن
+            </a>
           </div>
         </div>
       </div>
-      <div className=" mt-[805px] bg-[#F5F1E8] h-[297px] text-center p-16">
-        <h2 className="text-[#1F2937] font-medium text-4xl ">
-          رحلة عبر التاريخ
-        </h2>
-        <p className="text-[#6B7280] pt-10">
-          يضم المتحف المصري الكبير أكثر من 100,000 قطعة أثرية تحكي قصة الحضارة
-          المصرية العريقة، من عصر ما قبل التاريخ وحتى العصر اليوناني الروماني.
-          اكتشف كنوز توت عنخ آمون، والمومياوات الملكية، والتماثيل الضخمة التي
-          تجسد عظمة الفراعنة.
-        </p>
-      </div>
-      <div className="h-[532px] text-center p-16">
-        <h2 className="text-[#1F2937] font-medium text-4xl ">
-          القاعات المميزة
-        </h2>
-        <p className="text-[#6B7280] pt-8">استكشف أهم القاعات في المتحف</p>
-        <div className="container flex justify-between items-center pt-6">
-          <SomeHalls />
+
+      {/* قسم: رحلة عبر التاريخ */}
+      <div className="bg-[#F5F1E8] py-12 md:py-20 text-center px-4 md:px-8 font-cairo">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-[#1F2937] font-black text-2xl md:text-4xl">
+            رحلة عبر التاريخ
+          </h2>
+          <p className="text-[#6B7280] pt-6 md:pt-8 text-sm md:text-base leading-relaxed italic">
+            يضم المتحف المصري الكبير أكثر من 100,000 قطعة أثرية تحكي قصة الحضارة
+            المصرية العريقة، من عصر ما قبل التاريخ وحتى العصر اليوناني الروماني.
+            اكتشف كنوز توت عنخ آمون، والمومياوات الملكية، والتماثيل الضخمة التي
+            تجسد عظمة الفراعنة.
+          </p>
         </div>
       </div>
-      <div className="bg-[#1F2937] w-full text-center  my-10">
-        <ul className="container flex justify-between py-[102px] " dir="rtl">
-          <li>
-            <h2 className="text-[#D4AF37] text-4xl mb-3">100,000+</h2>
-            <p className="text-[#ffff]">قطعة أثرية</p>
+
+      {/* قسم: القاعات المميزة */}
+      <div className="py-12 md:py-20 text-center px-4 md:px-8 font-cairo bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-[#1F2937] font-black text-2xl md:text-4xl">
+            القاعات المميزة
+          </h2>
+          <p className="text-[#6B7280] pt-2 text-sm md:text-base mb-10">استكشف أهم القاعات في المتحف</p>
+          
+          {/* حاوية مرنة تستوعب القاعات دون تمدد مشوه */}
+          <div className="w-full">
+            <SomeHalls />
+          </div>
+        </div>
+      </div>
+
+      {/* قسم الإحصاءات الرقمية الفرعونية */}
+      <div className="bg-[#1F2937] w-full text-center py-12 md:py-16 px-4 font-cairo">
+        {/* تحويل القائمة لترتيب عمودي في الموبايل وعرضي في الشاشات الأكبر */}
+        <ul className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 items-center" dir="rtl">
+          <li className="space-y-1">
+            <h2 className="text-[#D4AF37] text-3xl md:text-4xl font-black tracking-tight">100,000+</h2>
+            <p className="text-[#ffff] text-xs md:text-sm font-medium">قطعة أثرية</p>
           </li>
-          <li>
-            <h2 className="text-[#D4AF37] text-4xl mb-3">5,000</h2>
-            <p className="text-[#ffff]">سنة من التاريخ</p>
+          <li className="space-y-1">
+            <h2 className="text-[#D4AF37] text-3xl md:text-4xl font-black tracking-tight">5,000</h2>
+            <p className="text-[#ffff] text-xs md:text-sm font-medium">سنة من التاريخ</p>
           </li>
-          <li>
-            <h2 className="text-[#D4AF37] text-4xl mb-3">15</h2>
-            <p className="text-[#ffff]">قاعة عرض</p>
+          <li className="space-y-1">
+            <h2 className="text-[#D4AF37] text-3xl md:text-4xl font-black tracking-tight">15</h2>
+            <p className="text-[#ffff] text-xs md:text-sm font-medium">قاعة عرض</p>
           </li>
-          <li>
-            <h2 className="text-[#D4AF37] text-4xl mb-3">2M+</h2>
-            <p className="text-[#ffff]">زائر سنوياً</p>
+          <li className="space-y-1">
+            <h2 className="text-[#D4AF37] text-3xl md:text-4xl font-black tracking-tight">2M+</h2>
+            <p className="text-[#ffff] text-xs md:text-sm font-medium">زائر سنوياً</p>
           </li>
         </ul>
       </div>
-      <div className="container w-full py-6">
-        <div className=" text-center items-center " >
-          <h2 className="text-[#1F2937] font-medium text-4xl">معلومات الزيارة</h2>
-          <div className="py-8">
-            <ul className="flex justify-between" dir="rtl">
-              <li className="flex flex-col justify-center items-center w-[200px] ">
-                <div className=" rounded-full w-fit text-[#ffff] p-2 bg-[#D4AF37]"><Clock8 /></div>
-                <h3 className="text-[#1F2937] font-bold py-3.5">أوقات العمل</h3>
-                <p className="text-[#6B7280]">يومياً من 9:00 صباحاً حتى 6:00 مساءً</p>
+
+      {/* قسم: معلومات الزيارة والمواعيد */}
+      <div className="w-full py-12 md:py-20 px-4 md:px-8 bg-white font-cairo">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-[#1F2937] font-black text-2xl md:text-4xl">معلومات الزيارة</h2>
+          
+          <div className="mt-10 md:mt-12">
+            {/* تحويل المعلومات إلى عمود للموبايل وجنب بعض للابتوب من خلال grid-cols-1 md:grid-cols-3 */}
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 justify-items-center" dir="rtl">
+              
+              {/* بطاقة أوقات العمل */}
+              <li className="flex flex-col justify-center items-center w-full max-w-[280px] bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <div className="rounded-full w-12 h-12 text-[#ffff] flex items-center justify-center bg-[#D4AF37] shadow-md shadow-amber-100">
+                  <Clock8 size={22} />
+                </div>
+                <h3 className="text-[#1F2937] font-black text-lg pt-4 pb-2">أوقات العمل</h3>
+                <p className="text-[#6B7280] text-sm leading-relaxed">يومياً من 9:00 صباحاً حتى 6:00 مساءً</p>
               </li>
-              <li className="flex flex-col justify-center items-center w-[200px] ">
-                <div className=" rounded-full w-fit text-[#ffff] p-2 bg-[#D4AF37]"><MapPin /></div>
-                <h3 className="text-[#1F2937] font-bold py-3.5">الموقع</h3>
-                <p className="text-[#6B7280]">الرماية، محافظة الجيزة، مصر</p>
+
+              {/* بطاقة الموقع */}
+              <li className="flex flex-col justify-center items-center w-full max-w-[280px] bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <div className="rounded-full w-12 h-12 text-[#ffff] flex items-center justify-center bg-[#D4AF37] shadow-md shadow-amber-100">
+                  <MapPin size={22} />
+                </div>
+                <h3 className="text-[#1F2937] font-black text-lg pt-4 pb-2">الموقع</h3>
+                <p className="text-[#6B7280] text-sm leading-relaxed">ميدان الرماية، محافظة الجيزة، مصر</p>
               </li>
-              <li className="flex flex-col justify-center items-center w-[200px] ">
-                <div className=" rounded-full w-fit text-[#ffff] p-2 bg-[#D4AF37]"><Ticket /></div>
-                <h3 className="text-[#1F2937] font-bold py-3.5">أسعار التذاكر</h3>
-                <p className="text-[#6B7280]">تبدأ من 200 جنيه للمصريين</p>
+
+              {/* بطاقة أسعار التذاكر */}
+              <li className="flex flex-col justify-center items-center w-full max-w-[280px] bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <div className="rounded-full w-12 h-12 text-[#ffff] flex items-center justify-center bg-[#D4AF37] shadow-md shadow-amber-100">
+                  <Ticket size={22} />
+                </div>
+                <h3 className="text-[#1F2937] font-black text-lg pt-4 pb-2">أسعار التذاكر</h3>
+                <p className="text-[#6B7280] text-sm leading-relaxed">تبدأ من 200 جنيه للمصريين</p>
               </li>
+
             </ul>
           </div>
-
         </div>
       </div>
     </>

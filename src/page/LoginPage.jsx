@@ -6,7 +6,7 @@ function LoginPage() {
     <section className="start  font-cairo h-screen max-xl:bg-center md:bg-tran">
       <div
         dir="rtl"
-        className="flex justify-between gap-4 h-screen overflow-hidden overflow-y-hidden"
+        className="flex justify-between gap-4 h-screen overflow-hidden overflow-y-hidden "
       >
         <div className="relative hidden lg:block lg:max-w-full max-w-[50%]  w-fit top-6 -right-9 ">
           <img

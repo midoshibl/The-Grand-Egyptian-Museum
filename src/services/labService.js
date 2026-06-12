@@ -1,7 +1,7 @@
 import api from "../api/api";
 
 export const labService = {
-  // جلب كافة المعامل مع بيانات الأقسام والقطع المرتبطة
+  // جلب كافة معامل الترميم
   getAllLabs: async () => {
     try {
       const response = await api.get("/api/ConservationLab");
