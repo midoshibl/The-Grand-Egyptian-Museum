@@ -46,7 +46,7 @@ export default function Login() {
 
   return (
     <div
-      className="z-40 font-cairo  flex flex-col items-center justify-center px-4 pl-60 "
+      className="z-40 font-cairo  flex flex-col items-center justify-center px-12  "
       dir="rtl"
     >
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">

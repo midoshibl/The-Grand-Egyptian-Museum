@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://grandegyptianmuseum1.runasp.net",
+  baseURL: "https://grandegyptianmuseum1.runasp.net",
 });
 
 // هذا الجزء بيلزق التوكن في أي طلب رايح للباك إند
