@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import labService from '../services/labService';
-
+import img1 from "../assets/images/Wood-Artifacts-Restoration.JPG"
+import img2 from "../assets/images/Mummies-Restoration.JPEG"
 const Conser = () => {
   const [labs, setLabs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,14 +19,14 @@ const Conser = () => {
               labId: 1,
               name: "مركز ترميم المومياوات والبقايا العضوية",
               description: "أحدث المعامل العلمية المتخصصة في فحص وصيانة المومياوات الملكية والأنسجة الأثرية باستخدام تقنيات النانو والتعقيم الخالي من الأكسجين لحمايتها من التحلل.",
-              imageUrl: "https://unsplash.com",
+              imageUrl: img2,
               sectionId: 1
             },
             {
               labId: 2,
               name: "معمل صيانة الآثار الخشبية والمراكب الجنائزية",
               description: "يتولى المعمل الإشراف العلمي على ترميم مقتنيات الملك توت عنخ آمون الخشبية وأجزاء مركب الشمس الخاصة بالملك خوفو بأعلى معايير الصيانة العالمية.",
-              imageUrl: "https://unsplash.com",
+              imageUrl: img1,
               sectionId: 4
             }
           ]);

@@ -233,7 +233,7 @@ function TheMuseum() {
           {/* تحويل الأزرار إلى عمودية في الموبايل وأفقية في اللابتوب */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <a
-              href="/Ticket"
+              href="/Booking"
               className="w-full sm:w-auto font-black text-sm md:text-base text-center text-[#F5F2ED] bg-[#C9A961] hover:bg-amber-600 px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform active:scale-95"
             >
               احجز زيارتك الآن

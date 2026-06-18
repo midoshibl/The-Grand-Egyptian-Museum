@@ -30,7 +30,7 @@ function Home() {
             <a href="/MuseumHalls" className="w-full sm:w-auto text-center border-2 border-[#FFFFFF] py-3.5 px-8 rounded-2xl font-bold hover:bg-white hover:text-slate-900 transition-all duration-300">
               استكشف القاعات
             </a>
-            <a href="/Ticket" className="w-full sm:w-auto text-center bg-[#D4AF37] text-white py-4 px-8 rounded-2xl font-black shadow-lg hover:bg-amber-500 hover:scale-95 transition-all duration-300">
+            <a href="/Booking" className="w-full sm:w-auto text-center bg-[#D4AF37] text-white py-4 px-8 rounded-2xl font-black shadow-lg hover:bg-amber-500 hover:scale-95 transition-all duration-300">
               احجز تذكرتك الآن
             </a>
           </div>
@@ -80,7 +80,7 @@ function Home() {
             <p className="text-[#ffff] text-xs md:text-sm font-medium">سنة من التاريخ</p>
           </li>
           <li className="space-y-1">
-            <h2 className="text-[#D4AF37] text-3xl md:text-4xl font-black tracking-tight">15</h2>
+            <h2 className="text-[#D4AF37] text-3xl md:text-4xl font-black tracking-tight">7</h2>
             <p className="text-[#ffff] text-xs md:text-sm font-medium">قاعة عرض</p>
           </li>
           <li className="space-y-1">
@@ -105,7 +105,7 @@ function Home() {
                   <Clock8 size={22} />
                 </div>
                 <h3 className="text-[#1F2937] font-black text-lg pt-4 pb-2">أوقات العمل</h3>
-                <p className="text-[#6B7280] text-sm leading-relaxed">يومياً من 9:00 صباحاً حتى 6:00 مساءً</p>
+                <p className="text-[#6B7280] text-sm leading-relaxed">يومياً من 9:00 صباحاً حتى 7:00 مساءً</p>
               </li>
 
               {/* بطاقة الموقع */}

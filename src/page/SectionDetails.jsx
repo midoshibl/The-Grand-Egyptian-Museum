@@ -46,7 +46,7 @@ const SectionDetails = () => {
         {/* كارت رأس القاعة */}
         <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-amber-100/40 mb-12">
           <span className="text-amber-600 font-black text-xs md:text-sm uppercase tracking-widest block mb-2">جناح العرض الرقمي</span>
-          <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-4">{hallData.name || "قاعة استكشافية"}</h1>
+          <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-4">{hallData.name || " أهم القطع المتواجدة بالقاعة"}</h1>
           <p className="text-slate-500 text-sm md:text-lg leading-relaxed italic">{hallData.description}</p>
         </div>
 

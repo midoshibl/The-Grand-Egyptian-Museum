@@ -16,7 +16,7 @@ import TutHall from "./page/TutHall";
 import KingKhufu from "./page/KingKhufu";
 import MainHalls from "./page/MainHalls";
 import Staff from "./Admin/Staff";
-import Attendance from "./Admin/Attendance";
+
 import Tasks from "./Admin/Tasks";
 import Artifacts from "./page/Artifacts";
 import ArtifactDetails from "./page/ArtifactDetails";
@@ -28,6 +28,8 @@ import SectionDetails from "./page/SectionDetails";
 import MyTasks from "./page/staff/MyTasks";
 import MyDashboard from "./page/staff/MyDashboard";
 import ExhibitionDetails from "./page/ExhibitionDetails";
+import AdminAttendanceLog from "./Admin/AdminAttendanceLog";
+import Attendance from "./page/staff/Attendance";
 
 function Layout() {
   const location = useLocation();
@@ -77,6 +79,7 @@ function Layout() {
           <Route path="/MyDashboard" element={<MyDashboard />} />
           <Route path="/section/:sectionId" element={<SectionDetails />} />
           <Route path="/my-tasks" element={<MyTasks />} />
+          <Route path="/AdminAttendanceLog" element={<AdminAttendanceLog/>} />
         </Routes>
       </main>
 

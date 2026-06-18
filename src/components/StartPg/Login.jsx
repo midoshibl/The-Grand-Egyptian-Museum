@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import logo_nav from "../../assets/images/logo1.png";
-import { IoLogoGoogle } from "react-icons/io";
+import logo_nav from "../../assets/images/logo1.jpg"; // تأكد من الامتداد png أو jpg حسب مجلدك
 import axios from "axios";
 
 export default function Login() {
@@ -13,48 +12,68 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      // تصحيح الرابط ليرسل لمسار الـ Auth/login الرسمي للباك إند
-      const response = await axios.post("https://runasp.net", {
+      // إرسال البيانات الحقيقية بالملي إلى الباك إند
+      const response = await axios.post("https://grandegyptianmuseum1.runasp.net/api/Auth/login", {
         email: email,
         password: password
       });
 
-      // التحقق الفعلي وحفظ التوكن في المتصفح ليتعرف عليه الـ Navbar أوتوماتيكياً
-      if (response.data) {
-        const token = response.data.token || response.data.data?.token || "mock-valid-token";
-        localStorage.setItem("token", token);
-        localStorage.setItem("employeeCheckInTime", new Date().toISOString());
-        
-        alert("تم تسجيل الدخول بنجاح ✅");
-        window.location.href = "/MyDashboard"; // تحويل فوري للوحة الموظف والبصمة المعتمدة بالـ Routes
+      // 💡 قراءة الاستجابة الحقيقية الماثلة في السواجر أمامك بالملي
+      if (response.data && response.data.status === "Success") {
+        const userData = response.data.data;
+        const userRole = userData?.role || "Visitor";
+        const displayName = userData?.displayName || "Tarek Alsayed Sobhi";
+        const isAuthenticated = userData?.isAuthenticated || false;
+
+        if (isAuthenticated) {
+          // 💡 بما أن الباك إند لا يرسل توكن، بنخزن مفتاح دخول حقيقي عشان الـ Navbar يقفل الصلاحيات صح
+          localStorage.setItem("token", "true-authenticated-session");
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("userRole", userRole); // هيخزن Admin بالملي
+          localStorage.setItem("displayName", displayName);
+          localStorage.setItem("employeeCheckInTime", new Date().toISOString());
+
+          alert(`مرحباً بعودتك، ${displayName} ✅`);
+
+          // التوجيه الصارم والحقيقي بناءً على الـ Role القادم من السيرفر
+          if (userRole === "Admin" || userRole === "admin") {
+            window.location.href = "/MyDashboard"; // الأدمن يروح للمهام والإدارة
+          } else if (userRole === "Staff" || userRole === "staff") {
+            window.location.href = "/MyDashboard"; // الموظف يروح للمهام والبصمة
+          } else {
+            window.location.href = "/Booking"; // الزائر يروح لحجز التذاكر
+          }
+          return;
+        }
       }
     } catch (err) {
-      console.error(err);
+      console.error("Technical Login Error:", err.response?.data);
       
-      // 💡 وضع الحماية الذكي: لو كتبت كلمة "string" أو إيميلك التجريبي يعبر السيرفر فوراً للعرض
-      if (email === "string" || email.includes("@")) {
-        localStorage.setItem("token", "mock-token");
-        localStorage.setItem("employeeCheckInTime", new Date().toISOString());
-        window.location.href = "/MyDashboard";
+      // طباعة رسالة الخطأ الحقيقية المكتوبة في الباك إند
+      const serverMessage = err.response?.data?.message || err.response?.data;
+      if (typeof serverMessage === 'string') {
+        alert(serverMessage);
       } else {
-        alert(err.response?.data?.message || "خطأ في البريد الإلكتروني أو كلمة المرور ❌");
+        alert("خطأ في البريد الإلكتروني أو كلمة المرور ❌");
       }
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div
-      className="z-40 font-cairo  flex flex-col items-center justify-center px-12  "
+      className="z-40 font-cairo min-h-screen flex flex-col items-center justify-center  px-4 pt-12 w-full text-right"
       dir="rtl"
     >
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+      {/* كارت تسجيل الدخول متجاوب بالكامل مع أبعاد الموبايل واللابتوب */}
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 md:p-8">
+        
+        {/* قسم الشعار المعتمد */}
         <div className="flex flex-col items-center mb-3">
           <img src={logo_nav} alt="GEM" className="h-[100px] w-[150px] object-contain" />
         </div>
 
-        {/* Title */}
+        {/* رأس الكارت */}
         <div className="text-center mb-6">
           <h2 className="text-center text-xl font-bold text-[#D4AF37] mb-2">
             تسجيل الدخول
@@ -62,7 +81,7 @@ export default function Login() {
           <p className="text-[#4B5563] text-sm">مرحباً بعودتك إلى المتحف الوطني</p>
         </div>
 
-        {/* Form */}
+        {/* استمارة تسجيل الدخول المربوطة بالـ API الصارم الفعلي */}
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
             <label className="block text-sm text-gray-600 mb-1">
@@ -73,7 +92,7 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 text-slate-800"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 text-slate-800 text-sm md:text-base text-left"
               placeholder="example@email.com"
             />
           </div>
@@ -87,51 +106,39 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 text-slate-800"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 text-slate-800 text-sm md:text-base text-left"
               placeholder="********"
             />
           </div>
 
-          <div className="text-sm text-orange-600 hover:underline cursor-pointer">
+          <div className="text-sm text-orange-600 hover:underline cursor-pointer font-bold">
             نسيت كلمة المرور؟
           </div>
 
+          {/* زر الإرسال المتجاوب والحيوي */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#D4AF37] cursor-pointer hover:bg-orange-500 text-white py-3 rounded-lg font-semibold transition-all shadow-md active:scale-95 border-none outline-none"
+            className="w-full bg-[#D4AF37] cursor-pointer hover:bg-orange-500 text-white py-3 rounded-lg font-black transition-all shadow-md active:scale-95 border-none outline-none text-sm md:text-base"
           >
-            {loading ? "جاري التحقق من الحساب..." : "تسجيل الدخول"}
+            {loading ? "جاري التحقق من الهوية الرقمية..." : "تسجيل الدخول"}
           </button>
         </form>
 
-        <div className="text-center text-gray-500 font-bold my-3">أو</div>
-
-        {/* Social Login */}
-        <div className="flex justify-center">
-          <button className="w-full rounded-lg border-double text-[#374151] border-2 border-[#D1D5DB] flex items-center justify-center hover:bg-gray-50 cursor-pointer bg-white py-1">
-            <a
-              href="https://accounts.google.com"
-              className="text-xl flex px-4 py-2 gap-2 items-center text-slate-700 decoration-none no-underline"
-            >
-              <IoLogoGoogle className="text-red-500" />
-              <span className="text-[14px] font-bold">تسجيل الدخول باستخدام جوجل</span>
-            </a>
-          </button>
-        </div>
-
-        {/* Footer */}
+        {/* التوجيه لإنشاء حساب جديد للزوار */}
         <p className="text-center text-sm text-gray-600 mt-6">
-          لا تمتلك حساب؟{" "}
-          <a className="text-[#D4AF37] font-bold cursor-pointer no-underline" href="/CreateAccount"> سجل الآن</a>
+          لا تمتلك حساب زائر؟{" "}
+          <a className="text-[#D4AF37] font-bold cursor-pointer no-underline hover:underline" href="/CreateAccount"> سجل الآن</a>
         </p>
 
+        {/* الشروط والأحكام */}
         <p className="flex justify-center flex-wrap gap-1 w-full text-[11px] text-gray-400 mt-4 text-center">
           <span>باستخدامك موقعنا، أنت توافق على</span>
           <a className="text-[#D4AF37] cursor-pointer underline">الشروط والأحكام</a>
         </p>
       </div>
       
+      {/* زر الرجوع للرئيسية الأسفل */}
       <a href="/home" className="flex gap-2 py-4 text-slate-500 hover:text-amber-600 transition-colors font-bold text-sm no-underline">
         العودة إلى الرئيسية <ArrowLeft size={18} />
       </a>

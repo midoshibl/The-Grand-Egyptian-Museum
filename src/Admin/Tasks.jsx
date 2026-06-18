@@ -1,37 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { taskService } from '../services/taskService';
 import axios from 'axios'; 
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
-  const [staffList, setStaffList] = useState([]); // هنا قائمة الموظفين الحقيقية
+  const [staffList, setStaffList] = useState([]); // قائمة الموظفين الفريدة المستخرجة
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // الحالة الابتدائية للمهمة الجديدة مطابقة لـ الـ Swagger بالملي
   const initialFormState = {
     taskId: 0,
     taskDescription: '',
-    isCompleted: false,
-    taskDate: new Date().toISOString().split('T')[0], // تنسيق YYYY-MM-DD
+    isCompleted: false, // نجعلها false افتراضياً للمهمة الجديدة
+    taskDate: new Date().toISOString().split('T')[0], // تنسيق حقيقي YYYY-MM-DD
     staffId: ''
   };
 
   const [formData, setFormData] = useState(initialFormState);
 
-  // 1. جلب البيانات (المهام والموظفين الحقيقيين من نفس الـ API الخاص بصفحة الـ Staff)
+  // 1. جلب البيانات الصافية من الـ API الحقيقي الخاص بك
   const loadData = async () => {
     try {
-      // جلب المهام الحقيقية المضافة في قاعدة البيانات
-      const responseTasks = await axios.get("https://runasp.net");
-      setTasks(responseTasks.data?.data || responseTasks.data || []);
-
-      // 💡 الحل الجذري: جلب قائمة الموظفين الحقيقيين مباشرة من الـ API المسؤول عن صفحة الموظفين (Staff)
-      const responseStaff = await axios.get("https://runasp.net");
-      const rawStaffData = responseStaff.data?.data || responseStaff.data || [];
+      // الطلب الرسمي والمباشر للباك إند أونلاين عبر الـ https
+      const response = await axios.get("https://grandegyptianmuseum1.runasp.net/api/Admin/tasks");
       
-      setStaffList(rawStaffData);
+      // استقبال مصفوفة المهام الحقيقية القادمة من السيرفر داخل حقل data
+      const rawTasks = response.data?.data || [];
+      setTasks(rawTasks);
+
+      // استخراج الموظفين الحقيقيين الفعليين المتواجدين بجدول المهام لمنع الانهيار 500
+      const uniqueStaffMap = {};
+      rawTasks.forEach(item => {
+        if (item.staffId && item.staffName) {
+          uniqueStaffMap[item.staffId] = item.staffName;
+        }
+      });
+
+      // تحويل البيانات لمصفوفة صافية جاهزة للـ Select
+      const cleanStaff = Object.keys(uniqueStaffMap).map(id => ({
+        staffId: Number(id),
+        fullName: uniqueStaffMap[id]
+      }));
+
+      setStaffList(cleanStaff);
     } catch (err) {
-      console.error("خطأ حقيقي في الربط المباشر بين الصفحتين:", err);
+      console.error("خطأ حقيقي في سحب داتا المهام القادمة من السيرفر:", err);
     } finally {
       setLoading(false);
     }
@@ -41,58 +54,50 @@ const Tasks = () => {
     loadData();
   }, []);
 
-  // 2. إرسال مهمة جديدة حقيقية ومربوطة بـ ID موظف حقيقي من الـ Staff
+  // 2. إرسال مهمة جديدة حقيقية وصارمة للباك إند
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.staffId) {
-      alert("⚠️ يرجى اختيار موظف مسؤول أولاً");
+    if (!formData.staffId || Number(formData.staffId) === 0) {
+      alert("⚠️ خطأ: يرجى اختيار موظف حقيقي من القائمة لتفادي انهيار السيرفر 500");
       return;
     }
 
     try {
       const payload = {
+        taskId: 0,
         taskDescription: formData.taskDescription,
         isCompleted: false,
-        taskDate: formData.formData?.taskDate || initialFormState.taskDate,
-        staffId: Number(formData.staffId), // إرسال الـ ID الفعلي كرقم للباك إند
-        taskId: 0
+        taskDate: formData.taskDate,
+        staffId: Number(formData.staffId) // إرسال المعرف الرقمي الفعلي
       };
 
-      await axios.post("https://runasp.net", payload);
-      alert("تم إسناد المهمة للموظف بنجاح في قاعدة البيانات ✅");
+      // الالتزام التلقائي بالرأس المطلوب في السواجر لمنع الـ 500
+      await axios.post("https://grandegyptianmuseum1.runasp.net/api/Admin/tasks", payload, {
+        headers: {
+          "Content-Type": "application/json-patch+json"
+        }
+      });
+
+      alert("تم إسناد المهمة وحفظها في قاعدة البيانات بنجاح ✅");
       setIsModalOpen(false);
       setFormData(initialFormState);
-      loadData(); // إعادة التحميل لتحديث الكروت على الشاشة فوراً
+      loadData(); // إعادة التحميل لعكس المهمة الجديدة فوراً
     } catch (err) {
-      console.error(err);
-      alert("فشل في إضافة المهمة: تأكد من مطابقة شروط السيرفر");
+      console.error("Server Submit Error:", err.response?.data);
+      alert("فشل في إضافة المهمة: تأكد من مطابقة شروط السيرفر ومقاييس البيانات ❌");
     }
   };
 
-  // 3. حذف مهمة حقيقية
-  const handleDelete = async (id) => {
-    if (window.confirm("هل تريد حذف هذه المهمة نهائياً؟")) {
-      try {
-        await axios.delete(`https://runasp.net/${id}`);
-        alert("تم الحذف بنجاح من قاعدة البيانات ✅");
-        setTasks(tasks.filter(t => t.taskId !== id));
-      } catch (err) {
-        console.error(err);
-        alert("خطأ في الحذف من السيرفر");
-      }
-    }
-  };
-
-  if (loading) return <div className="p-20 text-center font-bold text-xl font-cairo">جاري سحب بيانات المهام ومزامنتها مع قائمة الموظفين الحالية...</div>;
-
+  if (loading) return <div className="p-20 text-center font-bold text-xl font-cairo text-slate-700">جاري سحب داتا الـ API الحقيقية وسجلات التكليفات...</div>;
   return (
+    // ضبط الـ padding العلوي للتوافق التام مع الناف بار الثابت على كافة الأجهزة والتليفونات
     <div className="p-4 md:p-[120px] bg-gray-50 min-h-screen font-cairo text-right" dir="rtl">
       
-      {/* الرأس - متجاوب */}
+      {/* الرأس - متجاوب بالكامل */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
         <div className="border-r-8 border-emerald-600 pr-4">
           <h1 className="text-2xl md:text-3xl font-black text-slate-900 uppercase">لوحة توزيع المهام</h1>
-          <p className="text-gray-500 text-sm">متابعة تكليفات موظفي صفحة الـ Staff - المتحف المصري الكبير</p>
+          <p className="text-gray-500 text-sm">متابعة تكليفات موظفي المتحف الفعليين - المتحف المصري الكبير</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -102,10 +107,10 @@ const Tasks = () => {
         </button>
       </div>
 
-      {/* شبكة توزيع كروت المهام - متجاوبة 100% */}
+      {/* شبكة توزيع كروت المهام - متجاوبة 100% مع كافة الشاشات */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {tasks.map((task, index) => (
-          <div key={task.taskId || index} className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-xl transition-all group animate-fade-in">
+          <div key={task.taskId || index} className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-xl transition-all group">
             <div>
               <div className="flex justify-between items-start mb-6">
                 <span className={`px-4 py-1 rounded-full text-[10px] font-black tracking-widest ${task.isCompleted ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
@@ -124,19 +129,16 @@ const Tasks = () => {
                   {task.staffName?.charAt(0) || '؟'}
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-slate-700">{task.staffName || "موظف مسؤول"}</div>
+                  <div className="text-sm font-bold text-slate-700">{task.staffName || "موظف المتحف"}</div>
                   <div className="text-[10px] text-gray-400 italic">مسؤول المهمة</div>
                 </div>
               </div>
-              <button onClick={() => handleDelete(task.taskId)} className="text-gray-300 hover:text-red-500 transition-colors p-2 text-xl border-none bg-none cursor-pointer">
-                🗑️
-              </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* لوحة إضافة مهمة مدمج بها الموظفين الحقيقيين فقط */}
+      {/* لوحة إضافة مهمة */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex justify-center items-center p-4 z-50">
           <div className="bg-white rounded-[3rem] p-6 md:p-10 w-full max-w-lg shadow-2xl">
@@ -160,21 +162,14 @@ const Tasks = () => {
                   onChange={(e) => setFormData({...formData, staffId: e.target.value})}
                   value={formData.staffId}
                 >
-                  <option value="">-- اختر من قائمة موظفي الـ Staff الفعليين --</option>
+                  <option value="">-- اختر من قائمة موظفي المتحف الفعليين --</option>
                   
-                  {/* جلب وعرض البيانات الصافية والحقيقية لصفحة الموظفين بالملي */}
-                  {staffList.map((s, index) => {
-                    const id = s.staffId || s.id || s.StaffId || index;
-                    const name = s.fullName || s.fullname || s.FullName || s.name;
-                    
-                    if (!name || name === "string") return null;
-
-                    return (
-                      <option key={id} value={id}>
-                        {name}
-                      </option>
-                    );
-                  })}
+                  {/* الماب الصافي والنظيف من داتا الباك إند الصالحة فقط من جدول المهام */}
+                  {staffList.map((s) => (
+                    <option key={s.staffId} value={s.staffId}>
+                      {s.fullName}
+                    </option>
+                  ))}
                 </select>
               </div>
 

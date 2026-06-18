@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { attendanceService } from '../services/attendanceService';
-import { getAllStaff } from '../services/staffService';
+import { attendanceService } from '../../services/attendanceService';
+import { getAllStaff } from '../../services/staffService';
 
 const Attendance = () => {
   const [records, setRecords] = useState([]);

@@ -64,7 +64,7 @@ function Visit() {
             </span>
             <h3 className="text-[#374151] font-bold text-base md:text-lg">وقت الإغلاق</h3>
             <p className="text-[#1D4ED8] text-2xl md:text-3xl font-black">
-              06:00 مساءً
+              07:00 مساءً
             </p>
           </div>
 
@@ -175,13 +175,13 @@ function Visit() {
           
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <a
-              href="/Ticket"
+              href="/Booking"
               className="w-full sm:w-auto hover:bg-amber-600 font-bold transition-all text-base text-[#2563EB] bg-[#E5E7EB] px-8 py-3.5 rounded-xl flex gap-2 justify-center items-center shadow-lg"
             >
               <TicketsIcon size={18} /> احجز زيارتك الآن
             </a>
             <a
-              href="https://google.com" target="_blank" rel="noreferrer"
+              href="https://maps.app.goo.gl/U7CJXKUhRBndRDEc7" target="_blank" rel="noreferrer"
               className="w-full sm:w-auto text-base text-[#E5E7EB] border border-[#E5E7EB] px-8 py-3 rounded-xl flex gap-2 justify-center items-center hover:bg-white/10 transition-colors"
             >
               <MapPin size={18} /> اعرض الموقع

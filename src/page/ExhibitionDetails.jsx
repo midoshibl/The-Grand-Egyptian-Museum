@@ -48,11 +48,10 @@ const ExhibitionDetails = () => {
         <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-sm max-w-xl border border-slate-100">
           <span className="text-5xl block mb-4">🏺</span>
           <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2">
-            عذراً، لا توجد بيانات لهذا المعرض
+             لا توجد بيانات لهذا المعرض
           </h3>
           <p className="text-slate-400 text-sm md:text-base mb-6 leading-relaxed">
-            جدول المعارض في الباك إند فارغ حالياً أو أن المعرف المطلق غير صحيح.
-            يرجى ملء قاعدة البيانات من الـ Swagger.
+           لا توجد معارض مؤقتة حالياً
           </p>
           <a
             href="/ExhibitionDetails"
