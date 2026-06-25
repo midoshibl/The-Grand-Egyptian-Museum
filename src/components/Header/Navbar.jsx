@@ -22,14 +22,19 @@ function Navbar() {
     }
   }, []);
 
-  const handleLogout = () => {
-    if (window.confirm("هل تريد تسجيل الخروج من النظام؟")) {
-      localStorage.clear(); // مسح الجلسة والبصمة والتوكن بالكامل
-      setIsLoggedIn(false);
-      setOpen(false);
-      window.location.href = "/loginPage"; // تحويل لصفحة تسجيل الدخول
-    }
+    const handleLogout = () => {
+    // 💡 التعديل: مسح بيانات الحساب والتوكن فقط، وترك أوقات البصمة ثابتة ومحمية بالجهاز
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userStaffId");
+    localStorage.removeItem("displayName");
+    localStorage.removeItem("employeeCheckInTime");
+    
+    alert("تم تسجيل الخروج من النظام بنجاح ✅");
+    window.location.href = "/loginPage";
   };
+
   return (
     <>
       <header className="bg-[#FEFEFE] select-none fixed top-0 left-0 w-full z-49 backdrop-blur-md shadow font-cairo" dir="rtl">

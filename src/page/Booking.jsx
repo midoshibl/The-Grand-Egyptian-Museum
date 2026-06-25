@@ -46,6 +46,28 @@ const Booking = () => {
         setLoading(false);
       });
   }, []);
+  // 💡 التعديل السحري: إخفاء الـ Header والـ Footer تلقائياً بمجرد نجاح الحجز
+  useEffect(() => {
+    // البحث عن وسوم الهيدر والفوتر بداخل الصفحة
+    const header = document.querySelector("header");
+    const footer = document.querySelector("footer");
+
+    if (bookingSuccess) {
+      // لو الحجز نجح، اخفيهم تماماً من الشاشة للموبايل واللابتوب
+      if (header) header.style.display = "none";
+      if (footer) footer.style.display = "none";
+    } else {
+      // لو لسه بيحجز أو ضغط "حجز تذكرة أخرى"، يرجعوا طبيعي
+      if (header) header.style.display = "block";
+      if (footer) footer.style.display = "block";
+    }
+
+    // تنظيف التأثير عند الخروج من الصفحة لضمان عدم اختفائهم في باقي كود الموقع
+    return () => {
+      if (header) header.style.display = "block";
+      if (footer) footer.style.display = "block";
+    };
+  }, [bookingSuccess]);
 
   // 💡 فلترة الأسعار التلقائية بناءً على الجنسية المختارة
   const handleNationalityChange = (e) => {
@@ -97,7 +119,7 @@ const Booking = () => {
         totalPrice: (selectedTicketObj ? (selectedTicketObj.price || selectedTicketObj.Price) : 200) * payload.quantity
       });
       setBookingSuccess(true);
-      alert("تمت محاكاة وتأكيد الحجز بنجاح (وضع العرض التقديمي المباشر) 🎟️");
+      alert("تمت محاكاة وتأكيد الحجز بنجاح");
     } finally {
       setLoading(false);
     }
@@ -110,9 +132,9 @@ const Booking = () => {
   );
 
   if (bookingSuccess && generatedTicket) return (
-    <div className="min-h-screen  pt-32 pb-16 px-4 font-cairo text-center w-full  bg-cover bg-center bg-no-repeat bg-[url('/src/assets/images/back-startpage.jpeg')]" dir="rtl">
+    <div className="min-h-screen pt-22 font-cairo text-center w-full  bg-cover bg-center bg-no-repeat bg-[url('/src/assets/images/back-startpage.jpeg')]" dir="rtl">
       <div className="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden relative">
-        <div className="absolute top-0 inset-x-0 h-3 bg-gradient-to-l from-amber-500 to-amber-600"></div>
+        <div className="absolute top-0 inset-x-0 h-3  from-amber-500 to-amber-600"></div>
         <div className="p-8">
           <span className="text-5xl block mb-4">🎫</span>
           <h2 className="text-2xl font-black text-slate-800 mb-1">تذكرة الدخول الرقمية</h2>

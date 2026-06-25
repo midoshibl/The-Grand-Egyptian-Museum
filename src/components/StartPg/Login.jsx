@@ -25,26 +25,34 @@ export default function Login() {
         const displayName = userData?.displayName || "Tarek Alsayed Sobhi";
         const isAuthenticated = userData?.isAuthenticated || false;
 
+        // 💡 التعديل الإجباري: لقط الـ userId الرقمي الحقيقي للموظف القادم من الباك إند
+        const staffIdFromId = userData?.userId || userData?.Id || "1";
+
         if (isAuthenticated) {
-          // 💡 بما أن الباك إند لا يرسل توكن، بنخزن مفتاح دخول حقيقي عشان الـ Navbar يقفل الصلاحيات صح
+          // تخزين مفاتيح الجلسة الحقيقية لتتعرف عليها باقي الصفحات والـ Navbar
           localStorage.setItem("token", "true-authenticated-session");
           localStorage.setItem("userEmail", email);
-          localStorage.setItem("userRole", userRole); // هيخزن Admin بالملي
+          localStorage.setItem("userRole", userRole); 
           localStorage.setItem("displayName", displayName);
           localStorage.setItem("employeeCheckInTime", new Date().toISOString());
 
+          // 💡 الإضافة الوحيدة والسحرية: حفظ الـ ID الحقيقي المعزول للموظف المفتوح حالياً لكي تقرأه صفحات الحضور والمهام والداشبورد وتفصل داتا الموظفين فوراً
+          localStorage.setItem("userStaffId", String(staffIdFromId));
+
+          // 💡 السطرين السحريين: تصفير وتطهير كاش البصمات القديمة فوراً عند الدخول الجديد لتفتح الأزرار طلقة
+          localStorage.removeItem("employeeCheckInTimeReal");
+          localStorage.removeItem("employeeCheckOutTimeReal");
+
           alert(`مرحباً بعودتك، ${displayName} ✅`);
 
-          // التوجيه الصارم والحقيقي بناءً على الـ Role القادم من السيرفر
           if (userRole === "Admin" || userRole === "admin") {
-            window.location.href = "/MyDashboard"; // الأدمن يروح للمهام والإدارة
-          } else if (userRole === "Staff" || userRole === "staff") {
-            window.location.href = "/MyDashboard"; // الموظف يروح للمهام والبصمة
+            window.location.href = "/MyDashboard"; 
           } else {
-            window.location.href = "/Booking"; // الزائر يروح لحجز التذاكر
+            window.location.href = "/MyDashboard"; 
           }
           return;
         }
+
       }
     } catch (err) {
       console.error("Technical Login Error:", err.response?.data);
@@ -60,9 +68,10 @@ export default function Login() {
       setLoading(false);
     }
   };
+
   return (
     <div
-      className="z-40 font-cairo min-h-screen flex flex-col items-center justify-center  px-4 pt-12 w-full text-right"
+      className="z-40 font-cairo min-h-screen flex flex-col items-center justify-center px-4 pt-12 w-full text-right"
       dir="rtl"
     >
       {/* كارت تسجيل الدخول متجاوب بالكامل مع أبعاد الموبايل واللابتوب */}

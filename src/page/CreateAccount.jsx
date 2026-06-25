@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import logo_nav from "../assets/images/logo1.jpg"; // تم ضبط المسار ليعود خطوتين للخلف للفولدر الصحيح
-import logo from "../assets/images/mask2.png"; // استدعاء قناع توت عنخ آمون الكبير المفرغ
+import logo_nav from "../assets/images/logo1.jpg"; // شعار المتحف الصغير
+import logo from "../assets/images/mask2.png"; // قناع توت عنخ آمون الكبير
 import axios from "axios";
 
 export default function CreateAccount() {
@@ -17,17 +17,30 @@ export default function CreateAccount() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // 💡 التحقق الفوري محلياً من تطابق كلمتي المرور قبل إرهاق السيرفر
+    // 💡 1. فحص تطابق كلمتي المرور (Compare)
     if (formData.password !== formData.confirmPassword) {
-      alert("خطأ: كلمتا المرور غير متطابقتين ❌");
+      alert("يرجى تأكيد كلمة المرور: تنبيه: كلمة المرور وتأكيدها غير متطابقين ⚠️");
+      return;
+    }
+
+    // 💡 2. فحص صيغة الإيميل المعتمدة (Gmail أو Yahoo فقط)
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com)$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("عذراً، يجب استخدام حساب Gmail أو Yahoo فقط ⚠️");
+      return;
+    }
+
+    // 💡 3. فحص قوة وشروط الباسورد (حروف كبيرة وصغيرة وأرقام وبدون رموز)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]+$/;
+    if (!passwordRegex.test(formData.password)) {
+      alert("يجب أن تحتوي كلمة المرور على أرقام وحروف كبيرة وصغيرة، ولا يسمح بالرموز ⚠️");
       return;
     }
 
     setLoading(true);
     try {
-      // 💡 إرسال طلب الـ POST الحقيقي والمباشر بالـ Content-Type المطلوب في السواجر بالملي
       const response = await axios.post(
-        "https://grandegyptianmuseum1.runasp.net/api/Auth/register-visitor",
+        "https://runasp.net",
         formData,
         {
           headers: {
@@ -36,29 +49,20 @@ export default function CreateAccount() {
         }
       );
 
-      // 💡 قراءة رسالة النجاح الحقيقية الراجعة من السيرفر كود 200 كما هي في الـ Response body
       if (response.data) {
-        const successMessage = response.data.message || "تم إنشاء حساب الزائر بنجاح! استمتع برحلتك في GEM ✅";
-        alert(successMessage);
-        
-        // التحويل التلقائي الفوري لصفحة تسجيل الدخول لكي يدخل بحسابه الجديد حقيقياً
+        alert(response.data.message || "تم إنشاء حساب الزائر بنجاح! استمتع برحلتك في GEM ✅");
         window.location.href = "/loginPage";
       }
     } catch (err) {
-      console.error("Technical Registration Error:", err.response?.data);
-      
-      // طباعة رسالة الرفض الأصلية من الباك إند في حال كان الحساب مسجل مسبقاً أو الباسورد ضعيف
-      const serverMessage = err.response?.data?.message || err.response?.data;
-      if (typeof serverMessage === 'string') {
-        alert(`فشل إنشاء الحساب: ${serverMessage}`);
-      } else {
-        alert("خطأ في إنشاء الحساب: يرجى التأكد من كتابة البريد الإلكتروني بشكل صحيح ومطابقة شروط الباك إند ❌");
-      }
+      console.error("Registration Error:", err.response?.data);
+      // قراءة رسائل الأخطاء الصارمة الراجعة من الـ DataAnnotations بداخل السيرفر
+      const serverMessage = err.response?.data?.message || err.response?.data?.errors?.Email?.[0] || err.response?.data?.errors?.Password?.[0] || err.response?.data;
+      alert(typeof serverMessage === 'string' ? `فشل التسجيل: ${serverMessage}` : "خطأ: البيانات غير مطابقة لشروط السيرفر الصارمة ❌");
     } finally {
       setLoading(false);
     }
   };
-    return (
+  return (
     <>
       {/* 
           1. كلاس start يفرش كخلفية ممتدة على كامل الشاشة وبدون أي تظليل أسود.
@@ -73,20 +77,17 @@ export default function CreateAccount() {
           
           {/* 
               قناع توت عنخ آمون الجانبي (المفرغ):
-              يأخذ h-screen (طول الشاشة بالكامل) ويلتصق باليمين تماماً، وينكمش تلقائياً في الموبايل.
+              يأخذ h-screen (طول الشاشة بالكامل) ويلتصق باليمين تماماً، وينكمش تلقائياً في الموبايل لحماية مساحة الفورم.
           */}
           <div className="hidden lg:block lg:w-1/2 h-screen relative overflow-hidden select-none pointer-events-none">
             <img
               className="w-full h-full object-cover object-right"
-              src={logo} // قناع توت عنخ آمون (mask2.png) المستورد في الجزء الأول
+              src={logo}
               alt="Grand Egyptian Museum Mask"
             />
           </div>
           
-          {/* 
-              صندوق فورم إنشاء الحساب الأصلي الخاص بك:
-              يتوسط الجانب الأيسر فوق الخلفية الأصلية مباشرة، مع الالتزام التام بكامل كودك بدون تعديل حرف واحد
-          */}
+          {/* صندوق فورم إنشاء الحساب يتوسط الجانب الأيسر فوق الخلفية الأصلية مباشرة */}
           <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 z-10 min-h-screen">
             <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 md:p-8 text-right">
               
@@ -103,7 +104,7 @@ export default function CreateAccount() {
                 <p className="text-[#4B5563] text-xs">سجل بياناتك الحقيقية لتتمكن من حجز تذاكر المتحف الفورية</p>
               </div>
 
-              {/* استمارة التسجيل الحقيقية المربوطة بالـ API الصارم كما هي عندك بالملي */}
+              {/* استمارة التسجيل الأصلية الصافية المربوطة بالـ API بالملي */}
               <form className="space-y-4" onSubmit={handleRegister}>
                 
                 {/* الاسم الأول والأخير متجاوبين جنب بعض باللاب وتحت بعض بالموبايل */}
@@ -132,9 +133,9 @@ export default function CreateAccount() {
                   </div>
                 </div>
 
-                {/* البريد الإلكتروني */}
+                {/* البريد الإلكتروني - خاضع لشروط Gmail و Yahoo بالإجبار */}
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1">البريد الإلكتروني</label>
+                  <label className="block text-xs font-bold text-gray-600 mb-1">البريد الإلكتروني (Gmail أو Yahoo فقط)</label>
                   <input
                     type="email"
                     required
@@ -145,7 +146,7 @@ export default function CreateAccount() {
                   />
                 </div>
 
-                {/* كلمة المرور وعقدة الـ Confirmation */}
+                {/* كلمة المرور وتأكيد كلمة المرور - خاضعة لشروط الحروف الكبيرة والصغيرة والأرقام وبدون رموز */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-gray-600 mb-1">كلمة المرور</label>
@@ -171,7 +172,7 @@ export default function CreateAccount() {
                   </div>
                 </div>
 
-                {/* زر تأكيد الحساب الفعلي */}
+                {/* زر إنشاء الحساب الفعلي الصافي */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -181,7 +182,7 @@ export default function CreateAccount() {
                 </button>
               </form>
 
-              {/* التوجيه لصفحة الدخول لو عنده حساب جاهز */}
+              {/* التوجيه لصفحة الدخول */}
               <p className="text-center text-sm text-gray-600 mt-6">
                 تمتلك حساباً بالفعل؟{" "}
                 <a className="text-[#D4AF37] font-bold cursor-pointer no-underline hover:underline" href="/loginPage"> سجل دخولك الآن</a>
@@ -195,7 +196,7 @@ export default function CreateAccount() {
             </div>
           </div>
           
-          {/* زر العودة للرئيسية طائر بالجانب لسهولة الاستخدام */}
+          {/* زر العودة للرئيسية طائر بالخلفية لسهولة العودة */}
           <div className="absolute bottom-4 left-4 z-20">
             <a href="/home" className="flex gap-2 bg-white/80 backdrop-blur-sm shadow px-4 py-2 rounded-xl text-slate-600 hover:text-amber-600 transition-colors font-bold text-sm no-underline">
               العودة إلى الرئيسية <ArrowLeft size={18} />

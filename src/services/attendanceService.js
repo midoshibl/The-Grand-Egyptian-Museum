@@ -4,7 +4,7 @@ export const attendanceService = {
   // 1. جلب كل سجلات الحضور (خاص بالأدمن)
   getAll: async () => {
     const response = await api.get("/api/Admin/attendance");
-    return response.data.data || [];
+    return response.data?.data || response.data?.Data || response.data || [];
   },
 
   // 2. إضافة سجل حضور يدوي جديد (خاص بالأدمن)
@@ -20,20 +20,22 @@ export const attendanceService = {
 
   // 3. تسجيل انصراف موظف (خاص بالأدمن)
   checkOut: async (staffId) => {
-    const response = await api.put(`/api/Admin/attendance/checkout/${staffId}`);
+    const response = await api.put(`/api/Admin/attendance/checkout/${Number(staffId)}`);
     return response.data;
   },
 
   // 4. حذف سجل حضور (خاص بالأدمن)
   delete: async (id) => {
-    const response = await api.delete(`/api/Admin/attendance/${id}`);
+    const response = await api.delete(`/api/Admin/attendance/${Number(id)}`);
     return response.data;
   },
 
-  // 5. بصمة حضور الموظف الذكية (خاص بالموظف)
+  // 5. 💡 بصمة حضور الموظف الذكية (معدلة لتمرير الـ staffId كـ Query Parameter)
   checkInEmployee: async () => {
     try {
-      const response = await api.post("/api/Staff/check-in", {});
+      const loggedInStaffId = Number(localStorage.getItem("userStaffId")) || 1;
+      // تمرير الباراميتر صراحة في الرابط لتطابق السواجر الجديد بالملي
+      const response = await api.post(`/api/Staff/check-in?staffId=${loggedInStaffId}`, {});
       return response.data;
     } catch (error) {
       console.error("Error during employee check-in:", error);
@@ -41,11 +43,13 @@ export const attendanceService = {
     }
   },
 
-  // 6. بصمة انصراف الموظف الذكية (خاص بالموظف) - الدالة الجديدة
+  // 6. 💡 بصمة انصراف الموظف الذكية (معدلة لتمرير الـ staffId كـ Query Parameter)
   checkOutEmployee: async () => {
     try {
-      const response = await api.put("/api/Staff/check-out");
-      return response.data; // يعيد رسالة النجاح ووقت الانصراف الفعلي
+      const loggedInStaffId = Number(localStorage.getItem("userStaffId")) || 1;
+      // تمرير الباراميتر صراحة في الرابط لتطابق السواجر الجديد بالملي
+      const response = await api.put(`/api/Staff/check-out?staffId=${loggedInStaffId}`);
+      return response.data; 
     } catch (error) {
       console.error("Error during employee check-out:", error);
       throw error;

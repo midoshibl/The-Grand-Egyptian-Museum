@@ -1,81 +1,176 @@
-import React, { useEffect, useState } from "react";
-import { Calendar, Users, Clock } from "lucide-react";
-import api from "../api/api"; // ليلتصق توكن الأدمن تلقائياً بالطلب
+import React, { useEffect, useState } from 'react';
+import api from '../api/api'; 
 
-export default function AdminAttendanceLog() {
-  const [logs, setLogs] = useState([]);
+const AdminAttendance = () => {
+  const [records, setRecords] = useState([]);
+  const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ staffId: '', checkIn: new Date().toISOString().slice(0, 16) });
 
-  // جلب سجل الحضور العام لكل موظفي المتحف من الباك إند
-  useEffect(() => {
-    // 💡 هنا تضع رابط الـ GET الخاص بالأدمن لجلب سجل الحضور العام (لو متوفر في السواجر)
-    api.get("/api/Admin/attendance-log") 
-      .then((res) => {
-        setLogs(res.data?.data || res.data || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching attendance logs:", err);
-        // داتا تجريبية صافية فقط لكي لا تظهر الشاشة فارغة إذا كان السيرفر لسه مخلصش الـ Endpoint دي
-        setLogs([
-          { id: 1, staffName: "أحمد علي", date: "2026-06-18", checkIn: "08:30 AM", checkOut: "04:00 PM" },
-          { id: 2, staffName: "محمد حسن", date: "2026-06-18", checkIn: "09:00 AM", checkOut: "قيد الدوام ⏱️" },
-          { id: 3, staffName: "محمود جابر", date: "2026-06-18", checkIn: "08:15 AM", checkOut: "04:15 PM" }
-        ]);
-        setLoading(false);
-      });
+  const loadData = async () => {
+    try {
+      const [attendanceRes, staffRes] = await Promise.all([
+        api.get("/api/Admin/attendance"),
+        api.get("/api/Admin/staff")
+      ]);
+      setRecords(attendanceRes.data?.data || attendanceRes.data?.Data || attendanceRes.data || []);
+      setStaffList(staffRes.data?.Data || staffRes.data?.data || []);
+    } catch (err) { 
+      console.error(err); 
+    } finally { 
+      setLoading(false); 
+    }
+  };
+
+  useEffect(() => { 
+    loadData(); 
   }, []);
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 font-cairo">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-amber-600"></div>
-    </div>
-  );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post("/api/Admin/attendance", {
+        attendanceId: 0,
+        staffId: Number(formData.staffId),
+        checkIn: new Date(formData.checkIn).toISOString(),
+        checkOut: null
+      });
+      alert("تم تسجيل الحضور بنجاح ✅");
+      setIsModalOpen(false);
+      setFormData({ staffId: '', checkIn: new Date().toISOString().slice(0, 16) });
+      loadData();
+    } catch (err) { 
+      alert("خطأ في السيرفر ❌"); 
+    }
+  };
+
+  const handleCheckOut = async (staffId) => {
+    try {
+      await api.put(`/api/Admin/attendance/checkout/${Number(staffId)}`);
+      alert("تم تسجيل الانصراف بنجاح ✅");
+      loadData();
+    } catch (err) { 
+      alert("فشل العملية ❌"); 
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("هل تريد حذف هذا السجل؟")) {
+      try {
+        await api.delete(`/api/Admin/attendance/${Number(id)}`);
+        alert("تم الحذف بنجاح ✅");
+        loadData();
+      } catch (err) { 
+        alert("فشل الحذف ❌"); 
+      }
+    }
+  };
+
+  // دالتك الأصلية الشغالة تمام والمطابقة للباك إند 100%
+  const formatTime = (dateStr) => {
+    if (!dateStr || dateStr === "string") return "---";
+    try {
+      const dateObj = new Date(dateStr);
+      const hours = String(dateObj.getUTCHours()).padStart(2, '0');
+      const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    } catch {
+      return "---";
+    }
+  };
+
+  if (loading) return <div className="p-20 text-center font-bold text-xl font-cairo text-slate-700">جاري سحب تقارير البصمة...</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-28 md:pt-36 pb-16 px-4 md:px-8 font-cairo text-right" dir="rtl">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* الرأس */}
-        <div className="border-r-4 border-purple-600 pr-3 mb-8">
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900">سجلات الحضور العام للكوادر</h1>
-          <p className="text-slate-400 text-xs md:text-sm font-medium mt-1">لوحة رقابة ومتابعة توقيتات تبصيم موظفي المتحف المصري الكبير</p>
-        </div>
+    <div className="p-[120px] bg-gray-50 min-h-screen font-sans text-right" dir="rtl">
+      <div className="flex justify-between items-center mb-10">
+        <h1 className="text-3xl font-black text-slate-800 border-r-8 border-indigo-600 pr-4">لوحة الحضور العام للأدمن</h1>
+        <button onClick={() => setIsModalOpen(true)} className="bg-indigo-600 text-white px-8 py-3 rounded-2xl shadow-lg font-bold border-none cursor-pointer text-sm">
+          + تسجيل حضور يدوي
+        </button>
+      </div>
 
-        {/* جدول السجلات المتجاوب - يتحول لكروت في الموبايل ولجدول فخم في اللابتوب */}
-        <div className="bg-white rounded-2rem shadow-xl border border-slate-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse">
-              <thead>
-                <tr className="bg-slate-900 text-white text-xs md:text-sm font-black">
-                  <th className="p-4 md:p-5">اسم الموظف</th>
-                  <th className="p-4 md:p-5">التاريخ</th>
-                  <th className="p-4 md:p-5">بصمة الحضور</th>
-                  <th className="p-4 md:p-5">بصمة الانصراف</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm font-bold text-slate-700 divide-y divide-slate-100">
-                {logs.map((log, index) => (
-                  <tr key={log.id || index} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="p-4 md:p-5 flex items-center gap-2">
-                      <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center text-purple-700 text-xs font-black">{log.staffName?.charAt(0)}</div>
-                      <span className="text-slate-900">{log.staffName}</span>
+      <div className="bg-white rounded-2rem shadow-sm border border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-right border-collapse">
+            <thead className="bg-slate-50 text-slate-600 uppercase text-sm font-black">
+              <tr>
+                <th className="p-6">الموظف المسؤول</th>
+                <th className="p-6 text-center">حضور</th>
+                <th className="p-6 text-center">انصراف</th>
+                <th className="p-6 text-center">الإجراء</th>
+                <th className="p-6 text-center">حذف</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50 text-sm font-bold text-slate-700">
+              {records.map((record, index) => {
+                const staffObj = record.staff || record.Staff;
+                const staffName = staffObj?.fullName || staffObj?.FullName || record.staffName || `موظف رقم (${record.staffId || index + 1})`;
+                
+                return (
+                  <tr key={record.attendanceId || index} className="hover:bg-indigo-50/30 transition-colors">
+                    <td className="p-6 font-bold text-slate-800 flex items-center gap-2">
+                      <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-700 text-xs font-black">{staffName.charAt(0)}</div>
+                      <span>{staffName}</span>
                     </td>
-                    <td className="p-4 md:p-5 font-mono text-xs text-slate-500">{log.date || log.taskDate || "2026-06-18"}</td>
-                    <td className="p-4 md:p-5 text-emerald-600 font-mono">{log.checkIn || "08:00 AM"}</td>
-                    <td className="p-4 md:p-5 font-mono">
-                      <span className={`px-2.5 py-1 rounded-lg text-xs ${log.checkOut?.includes("قيد") ? 'bg-amber-100 text-amber-800' : 'text-blue-600 bg-blue-50'}`}>
-                        {log.checkOut}
+                    <td className="p-6 text-center text-indigo-600 font-mono font-bold">{formatTime(record.checkIn || record.CheckIn)}</td>
+                    <td className="p-6 text-center text-red-400 font-mono font-bold">
+                      <span className={`px-2 py-0.5 rounded-lg ${!(record.checkOut || record.CheckOut) ? 'bg-amber-100 text-amber-800 text-[11px]' : ''}`}>
+                        {formatTime(record.checkOut || record.CheckOut)}
                       </span>
                     </td>
+                    <td className="p-6 text-center">
+                      {!(record.checkOut || record.CheckOut) ? (
+                        <button onClick={() => handleCheckOut(record.staffId || record.StaffId)} className="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md hover:bg-red-600 border-none cursor-pointer">انصراف 🚪</button>
+                      ) : (
+                        <span className="text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg text-xs font-black">مكتمل</span>
+                      )}
+                    </td>
+                    <td className="p-6 text-center">
+                      <button onClick={() => handleDelete(record.attendanceId || record.AttendanceId)} className="text-gray-300 hover:text-red-500 transition bg-none border-none cursor-pointer text-lg">🗑️</button>
+                    </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white rounded-2rem p-10 w-full max-w-md shadow-2xl text-right">
+            <h2 className="text-2xl font-bold mb-6 text-slate-900 border-r-4 border-indigo-600 pr-2">تسجيل حضور يدوي بالنظام</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1 mr-1">اختيار الموظف</label>
+                <select 
+                  required 
+                  className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 font-bold text-sm bg-white" 
+                  onChange={(e) => setFormData({...formData, staffId: e.target.value})}
+                  value={formData.staffId}
+                >
+                  <option value="">-- اختر الموظف --</option>
+                  {staffList.map(s => (
+                    <option key={s.staffId || s.StaffId} value={s.staffId || s.StaffId}>{s.fullName || s.FullName}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1 mr-1">تحديد التاريخ والوقت</label>
+                <input type="datetime-local" required value={formData.checkIn} className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 font-bold text-sm text-center" onChange={(e) => setFormData({...formData, checkIn: e.target.value})} />
+              </div>
+              <div className="flex gap-4 mt-6">
+                <button type="submit" className="flex-1 bg-indigo-600 text-white py-3.5 rounded-xl font-bold shadow-lg border-none cursor-pointer hover:bg-indigo-700 text-sm">تأكيد</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 bg-gray-100 text-gray-500 py-3.5 rounded-xl font-bold border-none cursor-pointer hover:bg-gray-200 text-sm">إلغاء</button>
+              </div>
+            </form>
           </div>
         </div>
-
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default AdminAttendance;
