@@ -134,7 +134,7 @@ const Tasks = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700 mr-2">الموظف المسؤول</label>
-                <select required className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-emerald-500 outline-none text-slate-800 font-bold text-sm bg-white" onChange={(e) => setFormData({...formData, staffId: e.target.value})} value={formData.staffId}>
+                <select required className="w-full bg-white border-none rounded-2xl p-4 focus:ring-2 focus:ring-emerald-500 outline-none text-slate-800 font-bold text-sm " onChange={(e) => setFormData({...formData, staffId: e.target.value})} value={formData.staffId}>
                   <option value="">-- اختر الموظف المسؤول بالـ ID الحقيقي --</option>
                   {staffList.map((s) => (
                     <option key={s.staffId || s.StaffId} value={s.staffId || s.StaffId}>
