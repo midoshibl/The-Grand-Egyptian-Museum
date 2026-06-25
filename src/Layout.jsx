@@ -80,7 +80,7 @@ function Layout() {
           <Route path="/MyDashboard" element={<MyDashboard />} />
           <Route path="/section/:sectionId" element={<SectionDetails />} />
           <Route path="/my-tasks" element={<MyTasks />} />
-          <Route path="/AdminAttendanceLog" element={<AdminAttendanceLog/>} />
+          <Route path="/AdminAttendance" element={<AdminAttendanceLog/>} />
         </Routes>
       </main>
 
